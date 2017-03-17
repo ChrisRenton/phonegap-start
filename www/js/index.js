@@ -16,6 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+/**
+ * This function will draw the given path.
+ */
+function listPath(myPath){
+  window.resolveLocalFileSystemURL(myPath, function (dirEntry) {
+       var directoryReader = dirEntry.createReader();
+       directoryReader.readEntries(onSuccessCallback,onFailCallback);
+  });
+
+  function onSuccessCallback(entries){
+       for (i=0; i<entries.length; i++) {
+           var row = entries[i];
+           var html = '';         
+           if(row.isDirectory){
+                 // We will draw the content of the clicked folder
+                 html = '<li onclick="listPath('+"'"+row.nativeURL+"'"+');">'+row.name+'</li>';
+           }else{
+                 // alert the path of file
+                 html = '<li onclick="getFilepath('+"'"+row.nativeURL+"'"+');">'+row.name+'</li>';
+           }
+       
+       }
+                
+        document.getElementById("select-demo").innerHTML = html;
+  }
+
+  function onFailCallback(e){
+    console.error(e);
+    // In case of error
+  }
+}
+
+function getFilepath(thefilepath){
+        alert(thefilepath);
+}
+
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -34,6 +72,7 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        listPath(cordova.file.externalRootDirectory);
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
