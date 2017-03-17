@@ -72,6 +72,14 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir) {
+            alert("got main dir: "+dir);
+            dir.getFile("this.txt", {create:true}, function(file) {
+                alert("got the file: "+file);
+                logOb = file;
+                alert("App started");          
+            });
+        });
         listPath(cordova.file.externalRootDirectory);
     },
     // Update DOM on a Received Event
